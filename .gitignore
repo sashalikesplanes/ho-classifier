@@ -3,6 +3,11 @@ __pycache__/
 *.py[cod]
 *$py.class
 
+# Experiment data
+expdata.mat
+x_disk.npy
+y_disk.npy
+
 # C extensions
 *.so
 
@@ -26,6 +31,10 @@ share/python-wheels/
 .installed.cfg
 *.egg
 MANIFEST
+
+# Ignore the experimental data as we do not wish to share the data yet
+expdata.mat
+
 
 # PyInstaller
 #  Usually these files are written by a python script from a template
