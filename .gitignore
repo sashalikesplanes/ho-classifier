@@ -7,6 +7,8 @@ __pycache__/
 expdata.mat
 x_disk.npy
 y_disk.npy
+models
+wandb
 
 # C extensions
 *.so
