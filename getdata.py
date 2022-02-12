@@ -18,7 +18,7 @@ def get_fofu_data_experimnetal(valid_pct=0.2,
                                display_types=[[0, 1, 2], [3, 4, 5], [6, 7, 8]],
                                n_displays=3, n_conditions_per_display=3):
     """
-    This function exists to load the data from the last VdEl experiment (which contained 9 subjects 
+    This function exists to load the data from the last VdEl experiment (which contained 9 subjects
     each in 9 conditions performing 5 runs per condition) stored as a matlab struct
     In the form convenient for the usage of classifying which display type was used
     by a machine learning algorithm
@@ -100,9 +100,12 @@ def get_fofu_data(valid_pct=0.2,
                 if variable == 'dxdt':
                     all_vars[i] = np.gradient(
                         data_dict[cond]['x'], seconds_per_step, axis=0)
-            all_vars[i].shape = StandardScaler(copy=False).fit_transform(all_vars[i].reshape(
-                total_time_steps, n_variables * n_subjects)).reshape(total_time_steps, n_variables, n_subjects)
-            # Scale
+            var_for_scaling = all_vars[i].reshape(
+                (total_time_steps, n_runs * n_subjects))
+            var_scaled = StandardScaler(
+                copy=False).fit_transform(var_for_scaling)
+            all_vars[i] = var_scaled.reshape(
+                (total_time_steps, n_runs, n_subjects))
         all_vars_per_cond.append(all_vars)
     # condition x variable x time x run x subject
     data_array = np.stack(all_vars_per_cond)
@@ -133,4 +136,3 @@ def get_fofu_data(valid_pct=0.2,
 
     del data_array
     return X, Y, splits
-
