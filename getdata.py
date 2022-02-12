@@ -134,5 +134,3 @@ def get_fofu_data(valid_pct=0.2,
     del data_array
     return X, Y, splits
 
-
-get_fofu_data_old()
