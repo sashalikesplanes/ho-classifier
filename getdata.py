@@ -136,4 +136,5 @@ def get_fofu_data(valid_pct=0.2,
                     sample_index += 1
 
     del data_array
-    return X, Y, splits
+    # Remove samples to reduce the final sample rate
+    return X[:, :, ::int(data_freq / sample_freq)], Y, splits
