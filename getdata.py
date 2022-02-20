@@ -54,8 +54,9 @@ def get_fofu_data(valid_pct=0.2,
                   variables=['e', 'u', 'x', 'dedt', 'dudt', 'dxdt'],
                   time_window=150,
                   total_time_steps=12000,
+                  sample_freq=50,
                   time_steps_between_samples=75,
-                  seconds_per_step=0.01,
+                  data_freq=100,
                   subj_indices=[0, 1, 2, 3, 4, 5, 6, 7, 8],
                   run_indices=[0, 1, 2, 3, 4],
                   desired_conditions=['CL', 'CM', 'CH',
@@ -93,13 +94,13 @@ def get_fofu_data(valid_pct=0.2,
             except KeyError:
                 if variable == 'dedt':
                     all_vars[i] = np.gradient(
-                        data_dict[cond]['e'], seconds_per_step, axis=0)
+                        data_dict[cond]['e'], 1 / data_freq, axis=0)
                 if variable == 'dudt':
                     all_vars[i] = np.gradient(
-                        data_dict[cond]['u'], seconds_per_step, axis=0)
+                        data_dict[cond]['u'], 1 / data_freq, axis=0)
                 if variable == 'dxdt':
                     all_vars[i] = np.gradient(
-                        data_dict[cond]['x'], seconds_per_step, axis=0)
+                        data_dict[cond]['x'], 1 / data_freq, axis=0)
             var_for_scaling = all_vars[i].reshape(
                 (total_time_steps, n_runs * n_subjects))
             var_scaled = StandardScaler(
@@ -135,4 +136,5 @@ def get_fofu_data(valid_pct=0.2,
                     sample_index += 1
 
     del data_array
-    return X, Y, splits
+    # Remove samples to reduce the final sample rate
+    return X[:, :, ::int(data_freq / sample_freq)], Y, splits
