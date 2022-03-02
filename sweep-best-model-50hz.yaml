@@ -5,7 +5,7 @@ method: random
 metric:
   goal: maximize
   name: accuracy
-name: Few Epoch sweep
+name: Replicate Model 25 x 25
 parameters:
   batch_size:
     value: 64
@@ -16,17 +16,15 @@ parameters:
   bottleneck_size:
     value: 0
   conv_dropout:
-    max: 0.10
-    min: 0.03
+    value: 0.05
   depth:
     value: 6
   epochs:
-    value: 35
+    value: 25
   ks:
     value: 64
   lr:
-    max: 0.005
-    min: 0.001
+    value: 0.00275
   nf:
     value: 24
   residual:
@@ -42,7 +40,5 @@ parameters:
     - dudt
     - dxdt
   wd:
-    distribution: log_uniform
-    max: -1.5
-    min: -3.5
-project: HOClass
+    value: 0.05
+project: ModelReplicate
