@@ -1,0 +1,56 @@
+program: train.py
+description: A sweep using Bayes search, adjusted range on Wd, decreased lower bound
+  on Conv_dropout factor, added data standardization using Verskeer method, changed
+  bottleneck to always off, switched residual to always off, switched LR to use a
+  range
+early_terminate:
+  eta: 2
+  min_iter: 7500
+  type: hyperband
+method: bayes
+metric:
+  goal: maximize
+  name: accuracy
+name: Sweep on LR, Wd, and Dropout using Standardized data with accuracy as metric
+parameters:
+  batch_size:
+    value: 64
+  bn:
+    values:
+    - true
+    - false
+  bottleneck:
+    value: false
+  bottleneck_size:
+    value: 0
+  conv_dropout:
+    max: 0.3
+    min: 0.05
+  depth:
+    value: 6
+  epochs:
+    value: 50
+  ks:
+    value: 64
+  lr:
+    max: 0.01
+    min: 0.0025
+  nf:
+    value: 24
+  residual:
+    value: false
+  valid_pct:
+    value: 0.2
+  variables:
+    value:
+    - e
+    - u
+    - x
+    - dedt
+    - dudt
+    - dxdt
+  wd:
+    distribution: log_uniform
+    max: -1
+    min: -2
+project: HOClass

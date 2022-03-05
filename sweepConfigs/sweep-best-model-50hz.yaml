@@ -1,0 +1,44 @@
+program: train.py
+description: A random sweep, on 50HZ original dataset with goal of replicating
+  range
+method: random
+metric:
+  goal: maximize
+  name: accuracy
+name: Replicate Model 25 x 25
+parameters:
+  batch_size:
+    value: 64
+  bn:
+    value: false
+  bottleneck:
+    value: false
+  bottleneck_size:
+    value: 0
+  conv_dropout:
+    value: 0.05
+  depth:
+    value: 6
+  epochs:
+    value: 25
+  ks:
+    value: 64
+  lr:
+    value: 0.00275
+  nf:
+    value: 24
+  residual:
+    value: false
+  valid_pct:
+    value: 0.2
+  variables:
+    value:
+    - e
+    - u
+    - x
+    - dedt
+    - dudt
+    - dxdt
+  wd:
+    value: 0.05
+project: ModelReplicate

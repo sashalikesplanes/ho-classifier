@@ -1,0 +1,48 @@
+program: train.py
+description: A random sweep
+  range
+method: random
+metric:
+  goal: maximize
+  name: accuracy
+name: Few Epoch sweep
+parameters:
+  batch_size:
+    value: 64
+  bn:
+    value: false
+  bottleneck:
+    value: false
+  bottleneck_size:
+    value: 0
+  conv_dropout:
+    max: 0.25
+    min: 0.05
+  depth:
+    value: 6
+  epochs:
+    value: 15
+  ks:
+    value: 64
+  lr:
+    max: 0.015
+    min: 0.0025
+  nf:
+    value: 24
+  residual:
+    value: false
+  valid_pct:
+    value: 0.2
+  variables:
+    value:
+    - e
+    - u
+    - x
+    - dedt
+    - dudt
+    - dxdt
+  wd:
+    distribution: log_uniform
+    max: -2
+    min: -3.5
+project: HOClass
