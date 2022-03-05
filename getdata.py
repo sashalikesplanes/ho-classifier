@@ -17,6 +17,7 @@ def get_fofu_data(valid_pct=0.2,
                                       'PL', 'PM', 'PH', 'PRL', 'PRM', 'PRH'],
                   condition_labels=[0, 0, 0, 1, 1, 1, 2, 2, 2],
                   display_types=[[0, 1, 2], [3, 4, 5], [6, 7, 8]]):
+    
     print(f"Loading data from: {data_file}")
     n_subjects = len(subj_indices)
     n_conditions = len(desired_conditions)
@@ -33,7 +34,7 @@ def get_fofu_data(valid_pct=0.2,
     # Each variable is a Rank 3 matrix with axis 0 representing time steps
     # axis 1 representing the run number per subject
     # and axis 2 representing the subject number
-    data_dict = io.loadmat(data_file, simplify_cells=True)['ed']
+    data_dict = io.loadmat("./data/" + data_file, simplify_cells=True)['ed']
 
     # Convert the data from the dictionaries into a 5 dimensional array
     all_vars_per_cond = []
