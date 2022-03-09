@@ -1,14 +1,14 @@
 program: train.py
-description: Data labelled incorrectly
+description: A Constant sweep to measure the accuracy of the classifier on the SI data set
   range
 method: random
 metric:
   goal: maximize
   name: accuracy
-name: Incorrect labels
+name: Best Model on SI
 parameters:
   data_file:
-    value: "expdata_SI_mislabeled.mat"
+    value: "expdata_SI.mat"
   batch_size:
     value: 64
   bn:
@@ -38,9 +38,6 @@ parameters:
     - e
     - u
     - x
-    - dedt
-    - dudt
-    - dxdt
   wd:
     value: 0.05
 project: ModelReplicate
