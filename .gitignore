@@ -11,7 +11,7 @@ x_disk.npy
 y_disk.npy
 models
 wandb
-
+data
 # C extensions
 *.so
 

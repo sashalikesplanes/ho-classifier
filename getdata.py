@@ -3,55 +3,9 @@ from scipy import io
 import random
 from sklearn.preprocessing import StandardScaler
 
-
-def get_fofu_data_experimnetal(valid_pct=0.2,
-                               variables=['e', 'u', 'x',
-                                          'dedt', 'dudt', 'dxdt'],
-                               time_window=150,
-                               n_time_steps=12000,
-                               time_steps_between_samples=75,
-                               seconds_per_step=0.01,
-                               subj_indices=[0, 1, 2, 3, 4, 5, 6, 7, 8],
-                               run_indices=[0, 1, 2, 3, 4],
-                               desired_conditions=['CL', 'CM', 'CH',
-                                                   'PL', 'PM', 'PH', 'PRL', 'PRM', 'PRH'],
-                               display_types=[[0, 1, 2], [3, 4, 5], [6, 7, 8]],
-                               n_displays=3, n_conditions_per_display=3):
-    """
-    This function exists to load the data from the last VdEl experiment (which contained 9 subjects
-    each in 9 conditions performing 5 runs per condition) stored as a matlab struct
-    In the form convenient for the usage of classifying which display type was used
-    by a machine learning algorithm
-    """
-    n_subjects = len(subj_indices)
-    n_conditions = len(desired_conditions)
-    n_runs = len(run_indices)
-    # number of variables selected for the run (e, u, x)
-    n_variables = len(variables)
-    n_samples = round((n_time_steps - time_window) / time_steps_between_samples *
-                      n_conditions * n_subjects * n_runs)
-    n_runs_total_per_display = n_subjects * n_runs * n_conditions_per_display
-
-    # Iterate over the 3 display types
-    # Per type, make an array of shape (n_variables, n_time_steps, n_runs_total_per_display)
-    #   also generating the derivative variables
-    # Standardize the array per variable
-    StandardScaler(copy=False)
-    # Transpose the array to (n_runs_total_per_display, n_variables,  n_time_steps)
-    # iterate over runs
-    #   randomly set run to validation with probability valid_pct
-    #   append all samples from the run to X (n_samples, n_variables, time_window)
-    #   append the display type to Y (n_samples,)
-    #   append the current sample index to either validation or train array for splits
-    data_dict = io.loadmat('expdata.mat', simplify_cells=True)['ed']
-    for display_label in range(n_displays):
-        all_runs_per_display = np.empty(
-            n_variables, n_time_steps, n_runs_total_per_display)
-        # for condition
-
-
 def get_fofu_data(valid_pct=0.2,
                   variables=['e', 'u', 'x', 'dedt', 'dudt', 'dxdt'],
+                  data_file='expdata_SI.mat',
                   time_window=150,
                   total_time_steps=12000,
                   sample_freq=50,
@@ -63,7 +17,8 @@ def get_fofu_data(valid_pct=0.2,
                                       'PL', 'PM', 'PH', 'PRL', 'PRM', 'PRH'],
                   condition_labels=[0, 0, 0, 1, 1, 1, 2, 2, 2],
                   display_types=[[0, 1, 2], [3, 4, 5], [6, 7, 8]]):
-
+    
+    print(f"Loading data from: {data_file}")
     n_subjects = len(subj_indices)
     n_conditions = len(desired_conditions)
     n_runs = len(run_indices)
@@ -79,7 +34,7 @@ def get_fofu_data(valid_pct=0.2,
     # Each variable is a Rank 3 matrix with axis 0 representing time steps
     # axis 1 representing the run number per subject
     # and axis 2 representing the subject number
-    data_dict = io.loadmat('expdata.mat', simplify_cells=True)['ed']
+    data_dict = io.loadmat("./data/" + data_file, simplify_cells=True)['ed']
 
     # Convert the data from the dictionaries into a 5 dimensional array
     all_vars_per_cond = []
@@ -138,3 +93,52 @@ def get_fofu_data(valid_pct=0.2,
     del data_array
     # Remove samples to reduce the final sample rate
     return X[:, :, ::int(data_freq / sample_freq)], Y, splits
+
+
+def get_fofu_data_experimnetal(valid_pct=0.2,
+                               data_file='expdata_SI.mat',
+                               variables=['e', 'u', 'x',
+                                          'dedt', 'dudt', 'dxdt'],
+                               time_window=150,
+                               n_time_steps=12000,
+                               time_steps_between_samples=75,
+                               seconds_per_step=0.01,
+                               subj_indices=[0, 1, 2, 3, 4, 5, 6, 7, 8],
+                               run_indices=[0, 1, 2, 3, 4],
+                               desired_conditions=['CL', 'CM', 'CH',
+                                                   'PL', 'PM', 'PH', 'PRL', 'PRM', 'PRH'],
+                               display_types=[[0, 1, 2], [3, 4, 5], [6, 7, 8]],
+                               n_displays=3, n_conditions_per_display=3):
+    """
+    This function exists to load the data from the last VdEl experiment (which contained 9 subjects
+    each in 9 conditions performing 5 runs per condition) stored as a matlab struct
+    In the form convenient for the usage of classifying which display type was used
+    by a machine learning algorithm
+    """
+    n_subjects = len(subj_indices)
+    n_conditions = len(desired_conditions)
+    n_runs = len(run_indices)
+    # number of variables selected for the run (e, u, x)
+    n_variables = len(variables)
+    n_samples = round((n_time_steps - time_window) / time_steps_between_samples *
+                      n_conditions * n_subjects * n_runs)
+    n_runs_total_per_display = n_subjects * n_runs * n_conditions_per_display
+
+    # Iterate over the 3 display types
+    # Per type, make an array of shape (n_variables, n_time_steps, n_runs_total_per_display)
+    #   also generating the derivative variables
+    # Standardize the array per variable
+    StandardScaler(copy=False)
+    # Transpose the array to (n_runs_total_per_display, n_variables,  n_time_steps)
+    # iterate over runs
+    #   randomly set run to validation with probability valid_pct
+    #   append all samples from the run to X (n_samples, n_variables, time_window)
+    #   append the display type to Y (n_samples,)
+    #   append the current sample index to either validation or train array for splits
+    data_dict = io.loadmat(data_file, simplify_cells=True)['ed']
+    for display_label in range(n_displays):
+        all_runs_per_display = np.empty(
+            n_variables, n_time_steps, n_runs_total_per_display)
+        # for condition
+
+
