@@ -1,16 +1,17 @@
 program: train.py
-description: A Constant sweep to measure the accuracy of the classifier on the SI data set
-  range
+description: Seeing what happens if we feed completly mislabeled data
 method: random
 metric:
   goal: maximize
   name: accuracy
-name: Best Model, no de, dx, du, and x
+name: SI, all vars, random labels
 parameters:
-  data_file:
-    value: "expdata_SI.mat"
   batch_size:
     value: 64
+  random_labels:
+    value: True
+  data_file:
+    value: "expdata_SI.mat"
   bn:
     value: false
   bottleneck:
@@ -37,6 +38,10 @@ parameters:
     value:
     - e
     - u
+    - x
+    - dedt
+    - dudt
+    - dxdt
   wd:
     value: 0.05
 project: ModelReplicate
