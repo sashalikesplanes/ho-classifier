@@ -22,7 +22,7 @@ wandb.init()
 config = wandb.config
 # Get the data sets
 
-X, Y, splits = get_fofu_data(valid_pct=config["valid_pct"], data_file=config["data_file"])
+X, Y, splits = get_fofu_data(valid_pct=config["valid_pct"], data_file=config["data_file"], variables=config["variables"], random_labels=config["random_labels"])
 
 tfms = [None, Categorize()]
 dsets = TSDatasets(X, Y, tfms=tfms, splits=splits, inplace=True)
