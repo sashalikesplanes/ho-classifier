@@ -4,6 +4,7 @@ import random
 from sklearn.preprocessing import StandardScaler
 
 def get_fofu_data(valid_pct=0.2,
+                  random_labels=False,
                   variables=['e', 'u', 'x', 'dedt', 'dudt', 'dxdt'],
                   data_file='expdata_SI.mat',
                   time_window=150,
@@ -19,6 +20,7 @@ def get_fofu_data(valid_pct=0.2,
                   display_types=[[0, 1, 2], [3, 4, 5], [6, 7, 8]]):
     
     print(f"Loading data from: {data_file}")
+    print(f"Selecting variables: {variables}")
     n_subjects = len(subj_indices)
     n_conditions = len(desired_conditions)
     n_runs = len(run_indices)
@@ -81,7 +83,11 @@ def get_fofu_data(valid_pct=0.2,
                 for t in range(0, total_time_steps - time_window, time_steps_between_samples):
                     X[sample_index] = data_array[cond_index, :,
                                                  t:t + time_window, run_index, subj_index]
-                    Y[sample_index] = condition_labels[cond_index]
+                    # Add ability to randomize labels
+                    if random_labels:
+                        Y[sample_index] = np.random.randint(0, 3)
+                    else:
+                        Y[sample_index] = condition_labels[cond_index]
                     # Record if this run will be validation or test
                     if random.random() < valid_pct:
                         splits[1].append(sample_index)
