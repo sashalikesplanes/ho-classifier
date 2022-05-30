@@ -17,10 +17,13 @@ def get_fofu_data(valid_pct=0.2,
                   desired_conditions=['CL', 'CM', 'CH',
                                       'PL', 'PM', 'PH', 'PRL', 'PRM', 'PRH'],
                   condition_labels=[0, 0, 0, 1, 1, 1, 2, 2, 2],
-                  display_types=[[0, 1, 2], [3, 4, 5], [6, 7, 8]]):
+                  display_types=[[0, 1, 2], [3, 4, 5], [6, 7, 8]],
+                  valid_subject=None):
     
     print(f"Loading data from: {data_file}")
     print(f"Selecting variables: {variables}")
+    print(f"Selecting conditons: {desired_conditions}")
+    print(f"With labels: {condition_labels}")
     n_subjects = len(subj_indices)
     n_conditions = len(desired_conditions)
     n_runs = len(run_indices)
@@ -89,10 +92,16 @@ def get_fofu_data(valid_pct=0.2,
                     else:
                         Y[sample_index] = condition_labels[cond_index]
                     # Record if this run will be validation or test
-                    if random.random() < valid_pct:
-                        splits[1].append(sample_index)
+                    if valid_subject == None:
+                        if random.random() < valid_pct:
+                            splits[1].append(sample_index)
+                        else:
+                            splits[0].append(sample_index)
                     else:
-                        splits[0].append(sample_index)
+                        if subj_index == valid_subject:
+                            splits[1].append(sample_index)
+                        else:
+                            splits[0].append(sample_index)
 
                     sample_index += 1
 

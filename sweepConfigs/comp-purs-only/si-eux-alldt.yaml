@@ -1,11 +1,17 @@
 program: train.py
-description: Measuring accuracy with varying derivatives
+description: Seeing the results of using only compensatory and pursuit displays
 method: random
 metric:
   goal: maximize
   name: accuracy
-name: SI, e, u, x
+name: SI, e, u, x, all dt
 parameters:
+  random_labels:
+    value: false
+  desired_conditions:
+    value: ['CL', 'CM', 'CH','PL', 'PM', 'PH']
+  condition_labels:
+    value: [0, 0, 0, 1, 1, 1]
   batch_size:
     value: 64
   data_file:
@@ -33,10 +39,7 @@ parameters:
   valid_pct:
     value: 0.2
   variables:
-    value:
-    - e
-    - u
-    - x
+    value: ['e', 'u', 'x', 'dedt', 'dudt', 'dxdt']
   wd:
     value: 0.05
-project: ModelReplicate
+project: CompVsPurs

@@ -4,14 +4,14 @@ method: random
 metric:
   goal: maximize
   name: accuracy
-name: SI, e, u, x, dedt, dudt, dxdt
+name: DI, e and u
 parameters:
+  random_labels:
+    value: false
   batch_size:
     value: 64
   data_file:
-    value: "expdata_SI.mat"
-  random_labels:
-    value: False
+    value: "expdata.mat"
   bn:
     value: false
   bottleneck:
@@ -38,10 +38,6 @@ parameters:
     value:
     - e
     - u
-    - x
-    - dedt
-    - dudt
-    - dxdt
   wd:
     value: 0.05
-project: ConfusionMatrix
+project: ModelReplicate
