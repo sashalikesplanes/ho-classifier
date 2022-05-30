@@ -1,9 +1,9 @@
-description: Cross validation of leaving 1 subject out
+description: Training the best model, to then investigate how it performs classifying the disappearing preview
 method: random
 metric:
   goal: maximize
   name: accuracy
-name: SI - subject 1
+name: Best Model
 parameters:
   batch_size:
     value: 64
@@ -55,14 +55,15 @@ parameters:
     value: false
   valid_pct:
     value: 0.2
-  valid_subject:
-    value: 0
   variables:
     value:
     - e
     - u
     - x
+    - dedt
+    - dudt
+    - dxdt
   wd:
     value: 0.05
 program: train.py
-project: CrossValid
+project: PreviewInvestigate
