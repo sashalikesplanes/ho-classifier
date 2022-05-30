@@ -1,27 +1,46 @@
-program: train.py
-description: Measuring accuracy with varying derivatives
+description: Cross validation of leaving 1 subject out
 method: random
 metric:
   goal: maximize
   name: accuracy
-name: SI, e, u, x, dedt, dudt, dxdt
+name: DI - subject 6
 parameters:
   batch_size:
     value: 64
-  data_file:
-    value: "expdata_SI.mat"
-  random_labels:
-    value: False
   bn:
     value: false
   bottleneck:
     value: false
   bottleneck_size:
     value: 0
+  condition_labels:
+    value:
+    - 0
+    - 0
+    - 0
+    - 1
+    - 1
+    - 1
+    - 2
+    - 2
+    - 2
   conv_dropout:
     value: 0.05
+  data_file:
+    value: expdata.mat
   depth:
     value: 6
+  desired_conditions:
+    value:
+    - CL
+    - CM
+    - CH
+    - PL
+    - PM
+    - PH
+    - PRL
+    - PRM
+    - PRH
   epochs:
     value: 25
   ks:
@@ -30,18 +49,20 @@ parameters:
     value: 0.00275
   nf:
     value: 24
+  random_labels:
+    value: false
   residual:
     value: false
   valid_pct:
     value: 0.2
+  valid_subject:
+    value: 5
   variables:
     value:
     - e
     - u
     - x
-    - dedt
-    - dudt
-    - dxdt
   wd:
     value: 0.05
-project: ConfusionMatrix
+program: train.py
+project: CrossValid

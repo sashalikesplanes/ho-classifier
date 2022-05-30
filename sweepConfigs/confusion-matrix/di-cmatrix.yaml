@@ -1,17 +1,23 @@
 program: train.py
-description: Measuring accuracy with varying derivatives
+description: Confusion matrix - DI data
 method: random
 metric:
   goal: maximize
   name: accuracy
-name: SI, e, u, x, dedt, dudt, dxdt
+name: DI Confusion Matrix
 parameters:
+  random_labels:
+    value: false
+  valid_subject:
+    value: null
+  desired_conditions:
+    value: ['CL', 'CM', 'CH','PL', 'PM', 'PH', 'PRL', 'PRM', 'PRH']
+  condition_labels:
+    value: [0, 0, 0, 1, 1, 1, 2, 2, 2]
   batch_size:
     value: 64
   data_file:
-    value: "expdata_SI.mat"
-  random_labels:
-    value: False
+    value: "expdata.mat"
   bn:
     value: false
   bottleneck:
@@ -39,9 +45,6 @@ parameters:
     - e
     - u
     - x
-    - dedt
-    - dudt
-    - dxdt
   wd:
     value: 0.05
 project: ConfusionMatrix

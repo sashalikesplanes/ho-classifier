@@ -1,17 +1,21 @@
 program: train.py
-description: Measuring accuracy with varying derivatives
+description: Seeing the results of using only compensatory and pursuit displays
 method: random
 metric:
   goal: maximize
   name: accuracy
-name: SI, e, u, x, dedt, dudt, dxdt
+name: DI, e, u, x
 parameters:
+  random_labels:
+    value: false
+  desired_conditions:
+    value: ['CL', 'CM', 'CH','PL', 'PM', 'PH']
+  condition_labels:
+    value: [0, 0, 0, 1, 1, 1]
   batch_size:
     value: 64
   data_file:
-    value: "expdata_SI.mat"
-  random_labels:
-    value: False
+    value: "expdata.mat"
   bn:
     value: false
   bottleneck:
@@ -39,9 +43,6 @@ parameters:
     - e
     - u
     - x
-    - dedt
-    - dudt
-    - dxdt
   wd:
     value: 0.05
-project: ConfusionMatrix
+project: CompVsPurs
