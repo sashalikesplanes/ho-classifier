@@ -10,55 +10,68 @@ from pathlib import Path
 #   I severly apoligize for any pain you may have experienced while reading this code
 #   Please do not judge me too harshly
 #   - sasha
-def get_var_prev_data(file):
+
+def get_var_prev_data(file = Path('data', 'expdata_var_prev.mat'),
+                     desired_conditions = ['PRL', 'PRM', 'PRH'],
+                     run_indices = [0],
+                     subj_indices = [0, 1, 2, 3, 4],
+                     time_steps_between_samples=75,
+                     start_time=0,
+                     end_time=5000,
+                     ):
     
     data_dict = io.loadmat(file, simplify_cells=True)['ed']
-    desired_conditions = ['PRL', 'PRM', 'PRH']
-    run_indices = [0]
-    subj_indices = [0, 1, 2, 3, 4]
+
     n_subjects = len(subj_indices)
+    max_n_subjects = 5
     n_runs = len(run_indices)
     n_conditions = len(desired_conditions)
     variables=['e', 'u', 'x', 'dedt', 'dudt', 'dxdt']
     n_variables = len(variables)
     time_window=150
-    total_time_steps=12000
+    # For sampling the data
+    total_time_steps=end_time - start_time
     sample_freq=50
-    time_steps_between_samples=75
+    
+    total_time_steps_data = 12000 # For loading the data
+    
     data_freq=100
-    n_samples = round((total_time_steps - time_window) / time_steps_between_samples *
-                            n_conditions * n_subjects * n_runs)
-    print(data_dict['PRL']['e'])
+    
+
     all_vars_per_cond = []
     for cond in desired_conditions:
         all_vars = np.empty(
-            (len(variables), total_time_steps, (n_runs), n_subjects))
+            (len(variables), total_time_steps_data, n_runs, max_n_subjects))
         for i, variable in enumerate(variables):
             try:
-                all_vars[i] = np.array(data_dict[cond][variable]).reshape((12000, 1, 5))
+                all_vars[i] = np.array(data_dict[cond][variable]).reshape((total_time_steps_data, n_runs, max_n_subjects))
             # Will fail if the variable is one of the derivatives as those are not in raw data
             # so we calculate derivative manually
             except KeyError:
                 if variable == 'dedt':
                     all_vars[i] = np.gradient(
-                        data_dict[cond]['e'].reshape((12000, 1, 5)), 1 / data_freq, axis=0)
+                        data_dict[cond]['e'].reshape((total_time_steps_data, n_runs, max_n_subjects)), 1 / data_freq, axis=0)
                 if variable == 'dudt':
                     all_vars[i] = np.gradient(
-                        data_dict[cond]['u'].reshape((12000, 1, 5)), 1 / data_freq, axis=0)
+                        data_dict[cond]['u'].reshape((total_time_steps_data, n_runs, max_n_subjects)), 1 / data_freq, axis=0)
                 if variable == 'dxdt':
                     all_vars[i] = np.gradient(
-                        data_dict[cond]['x'].reshape((12000, 1, 5)), 1 / data_freq, axis=0)
+                        data_dict[cond]['x'].reshape((total_time_steps_data, n_runs, max_n_subjects)), 1 / data_freq, axis=0)
             var_for_scaling = all_vars[i].reshape(
-                (total_time_steps, n_runs * n_subjects))
+                (total_time_steps_data, n_runs * max_n_subjects))
             var_scaled = StandardScaler(
                 copy=False).fit_transform(var_for_scaling)
             all_vars[i] = var_scaled.reshape(
-                (total_time_steps, n_runs, n_subjects))
+                (total_time_steps_data, n_runs, max_n_subjects))
+
         all_vars_per_cond.append(all_vars)
     # condition x variable x time x run x subject
     data_array = np.stack(all_vars_per_cond)
     del all_vars_per_cond
     
+    n_samples = round((total_time_steps - time_window) / time_steps_between_samples *
+                            n_conditions * n_subjects * n_runs)
+
 
     X = np.empty((n_samples, n_variables, time_window))
     
@@ -66,7 +79,8 @@ def get_var_prev_data(file):
     for cond_index in range(n_conditions):
         for subj_index in subj_indices:
             for run_index in run_indices:
-                for t in range(0, total_time_steps - time_window, time_steps_between_samples):
+                for t in range(start_time, end_time - time_window, time_steps_between_samples):
+
                     X[sample_index] = data_array[cond_index, :,
                                                  t:t + time_window, run_index, subj_index]
                     sample_index += 1

@@ -7,3 +7,5 @@ pip install --upgrade sktime==0.9.0
 pip3 install --upgrade numpy==1.20
 pip install wandb -U
 pip install optuna -U
+
+jupyter labextension install @axlair/jupyterlab_vim
