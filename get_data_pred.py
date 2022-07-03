@@ -10,6 +10,7 @@ from pathlib import Path
 #   I severly apoligize for any pain you may have experienced while reading this code
 #   Please do not judge me too harshly
 #   - sasha
+
 def get_var_prev_data(file = Path('data', 'expdata_var_prev.mat'),
                      desired_conditions = ['PRL', 'PRM', 'PRH'],
                      run_indices = [0],
@@ -62,6 +63,7 @@ def get_var_prev_data(file = Path('data', 'expdata_var_prev.mat'),
                 copy=False).fit_transform(var_for_scaling)
             all_vars[i] = var_scaled.reshape(
                 (total_time_steps_data, n_runs, max_n_subjects))
+
         all_vars_per_cond.append(all_vars)
     # condition x variable x time x run x subject
     data_array = np.stack(all_vars_per_cond)
@@ -70,6 +72,7 @@ def get_var_prev_data(file = Path('data', 'expdata_var_prev.mat'),
     n_samples = round((total_time_steps - time_window) / time_steps_between_samples *
                             n_conditions * n_subjects * n_runs)
 
+
     X = np.empty((n_samples, n_variables, time_window))
     
     sample_index = 0
@@ -77,6 +80,7 @@ def get_var_prev_data(file = Path('data', 'expdata_var_prev.mat'),
         for subj_index in subj_indices:
             for run_index in run_indices:
                 for t in range(start_time, end_time - time_window, time_steps_between_samples):
+
                     X[sample_index] = data_array[cond_index, :,
                                                  t:t + time_window, run_index, subj_index]
                     sample_index += 1
