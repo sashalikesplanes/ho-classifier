@@ -1,0 +1,71 @@
+description: Measuring accuracies 2 class
+method: random
+metric:
+  goal: maximize
+  name: accuracy
+name: e, u, x, de, du, dx, SI
+parameters:
+  batch_size:
+    value: 64
+  bn:
+    value: false
+  bottleneck:
+    value: false
+  bottleneck_size:
+    value: 0
+  conv_dropout:
+    value: 0.05
+  data_file:
+    value: expdata_SI_FIX.mat
+  depth:
+    value: 6
+  condition_labels:
+    value:
+    - 0
+    - 0
+    - 0
+    - 0
+    - 0
+    - 0
+    - 2
+    - 2
+    - 2
+  desired_conditions:
+    value:
+    - CL
+    - CM
+    - CH
+    - PL
+    - PM
+    - PH
+    - PRL
+    - PRM
+    - PRH
+  epochs:
+    value: 25 
+  ks:
+    value: 64
+  lr:
+    value: 0.00275
+  nf:
+    value: 24
+  random_labels:
+    value: false
+  residual:
+    value: false
+  valid_pct:
+    value: 0.2
+  valid_subject:
+    value: false
+  variables:
+    value:
+    - e
+    - u
+    - x
+    - dedt
+    - dudt
+    - dxdt
+  wd:
+    value: 0.05
+program: train.py
+project: 2Class

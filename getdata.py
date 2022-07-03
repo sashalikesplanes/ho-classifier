@@ -92,7 +92,7 @@ def get_fofu_data(valid_pct=0.2,
                     else:
                         Y[sample_index] = condition_labels[cond_index]
                     # Record if this run will be validation or test
-                    if valid_subject == None:
+                    if valid_subject not in [0, 1, 2, 3, 4, 5, 6, 7, 8] or not valid_subject:
                         if random.random() < valid_pct:
                             splits[1].append(sample_index)
                         else:
